@@ -40,18 +40,25 @@ public class GameManager : MonoBehaviour
 
     private GameSettings m_gameSettings;
 
-
     private BoardController m_boardController;
 
     private UIMainManager m_uiMenu;
 
     private LevelCondition m_levelCondition;
 
+    private SONormalItemTexture soNormalItemTexture;
+
+    public SONormalItemTexture SONormalItemTexture
+    {
+        get {return soNormalItemTexture;}  
+    }
+
     private void Awake()
     {
         State = eStateGame.SETUP;
 
         m_gameSettings = Resources.Load<GameSettings>(Constants.GAME_SETTINGS_PATH);
+        soNormalItemTexture = Resources.Load<SONormalItemTexture>(Constants.SO_NORMAL_ITEM_TEXTURE);
 
         m_uiMenu = FindObjectOfType<UIMainManager>();
         m_uiMenu.Setup(this);

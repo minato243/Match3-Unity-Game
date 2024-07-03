@@ -25,11 +25,15 @@ public class Board
 
     private int m_matchMin;
 
-    public Board(Transform transform, GameSettings gameSettings)
+    private SONormalItemTexture soNormalItemTexture;
+
+    public Board(Transform transform, GameSettings gameSettings, SONormalItemTexture soNormalItemTexture)
     {
         m_root = transform;
 
         m_matchMin = gameSettings.MatchesMin;
+
+        this.soNormalItemTexture = soNormalItemTexture;
 
         this.boardSizeX = gameSettings.BoardSizeX;
         this.boardSizeY = gameSettings.BoardSizeY;
@@ -99,7 +103,7 @@ public class Board
                         types.Add(nitem.ItemType);
                     }
                 }
-
+                item.SONormalItemTexuture = soNormalItemTexture;
                 item.SetType(Utils.GetRandomNormalTypeExcept(types.ToArray()));
                 item.SetView();
                 item.SetViewRoot(m_root);
@@ -146,7 +150,7 @@ public class Board
                 if (!cell.IsEmpty) continue;
 
                 NormalItem item = new NormalItem();
-
+                item.SONormalItemTexuture = soNormalItemTexture;
                 item.SetType(GetItemTypeForCell(cell));
                 item.SetView();
                 item.SetViewRoot(m_root);

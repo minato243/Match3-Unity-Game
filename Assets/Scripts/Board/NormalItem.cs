@@ -17,6 +17,12 @@ public class NormalItem : Item
 
     public eNormalType ItemType;
 
+    public override void SetView()
+    {
+        base.SetView();
+        View.GetComponent<SpriteRenderer>().sprite = SONormalItemTexuture.GetNormalItemSprite(ItemType);
+    }
+
     public void SetType(eNormalType type)
     {
         ItemType = type;
