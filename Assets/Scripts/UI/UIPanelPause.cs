@@ -6,13 +6,14 @@ using UnityEngine.UI;
 
 public class UIPanelPause : MonoBehaviour, IMenu
 {
-    [SerializeField] private Button btnClose;
+    [SerializeField] private Button btnClose, btnRestart;
 
     private UIMainManager m_mngr;
 
     private void Awake()
     {
         btnClose.onClick.AddListener(OnClickClose);
+        btnRestart.onClick.AddListener(OnClickRestart);
     }
 
     private void OnDestroy()
@@ -28,6 +29,12 @@ public class UIPanelPause : MonoBehaviour, IMenu
     private void OnClickClose()
     {
         m_mngr.ShowGameMenu();
+    }
+
+    public void OnClickRestart()
+    {
+        Hide();
+        m_mngr.Restart();
     }
 
     public void Show()

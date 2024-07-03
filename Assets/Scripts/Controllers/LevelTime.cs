@@ -20,6 +20,12 @@ public class LevelTime : LevelCondition
         UpdateText();
     }
 
+    public override void ResetLevel(float value)
+    {
+        m_time = value;
+        UpdateText();
+    }
+
     private void Update()
     {
         if (m_conditionCompleted) return;

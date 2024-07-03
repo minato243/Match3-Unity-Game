@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public eLevelMode CurMode { get; set; }
+
 
     private GameSettings m_gameSettings;
 
@@ -83,6 +85,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadLevel(eLevelMode mode)
     {
+        CurMode = mode;
         m_boardController = new GameObject("BoardController").AddComponent<BoardController>();
         m_boardController.StartGame(this, m_gameSettings);
 
@@ -94,7 +97,7 @@ public class GameManager : MonoBehaviour
         else if (mode == eLevelMode.TIMER)
         {
             m_levelCondition = this.gameObject.AddComponent<LevelTime>();
-            m_levelCondition.Setup(m_gameSettings.LevelMoves, m_uiMenu.GetLevelConditionView(), this);
+            m_levelCondition.Setup(m_gameSettings.LevelTime, m_uiMenu.GetLevelConditionView(), this);
         }
 
         m_levelCondition.ConditionCompleteEvent += GameOver;
@@ -135,5 +138,20 @@ public class GameManager : MonoBehaviour
             Destroy(m_levelCondition);
             m_levelCondition = null;
         }
+    }
+
+    public void Restart()
+    {
+        m_boardController.Clear();
+        m_boardController.StartGame(this, m_gameSettings);
+        if (CurMode == eLevelMode.MOVES)
+        {
+            m_levelCondition.ResetLevel(m_gameSettings.LevelMoves);
+        }
+        else if (CurMode == eLevelMode.TIMER)
+        {
+            m_levelCondition.ResetLevel(m_gameSettings.LevelTime);
+        }
+        State = eStateGame.GAME_STARTED;
     }
 }

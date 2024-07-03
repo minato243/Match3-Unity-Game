@@ -23,6 +23,12 @@ public class LevelMoves : LevelCondition
         UpdateText();
     }
 
+    public override void ResetLevel(float value)
+    {
+        m_moves = (int)value;
+        UpdateText();
+    }
+
     private void OnMove()
     {
         if (m_conditionCompleted) return;
