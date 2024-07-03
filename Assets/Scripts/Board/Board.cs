@@ -147,7 +147,7 @@ public class Board
 
                 NormalItem item = new NormalItem();
 
-                item.SetType(Utils.GetRandomNormalType());
+                item.SetType(GetItemTypeForCell(cell));
                 item.SetView();
                 item.SetViewRoot(m_root);
 
@@ -350,7 +350,7 @@ public class Board
         var dir = GetMatchDirection(matches);
 
         var bonus = matches.Where(x => x.Item is BonusItem).FirstOrDefault();
-        if(bonus == null)
+        if (bonus == null)
         {
             return matches;
         }
@@ -673,5 +673,87 @@ public class Board
                 m_cells[x, y] = null;
             }
         }
+    }
+
+    public NormalItem.eNormalType GetItemTypeForCell(Cell cell)
+    {
+        HashSet<NormalItem.eNormalType> types = new();
+        for (NormalItem.eNormalType type = NormalItem.eNormalType.TYPE_ONE;
+            type <= NormalItem.eNormalType.TYPE_SEVEN; type++)
+        {
+            types.Add(type);
+        }
+
+        if (cell.NeighbourUp!= null && !cell.NeighbourUp.IsEmpty)
+        {
+            Item item = cell.NeighbourUp.Item;
+            NormalItem normalItem = item as NormalItem;
+            if (normalItem != null)
+            {
+                types.Remove(normalItem.ItemType);
+            }
+        }
+
+        if (cell.NeighbourBottom != null && !cell.NeighbourBottom.IsEmpty)
+        {
+            Item item = cell.NeighbourBottom.Item;
+            NormalItem normalItem = item as NormalItem;
+            if (normalItem != null)
+            {
+                types.Remove(normalItem.ItemType);
+            }
+        }
+
+        if (cell.NeighbourLeft != null && !cell.NeighbourLeft.IsEmpty)
+        {
+            Item item = cell.NeighbourLeft.Item;
+            NormalItem normalItem = item as NormalItem;
+            if (normalItem != null)
+            {
+                types.Remove(normalItem.ItemType);
+            }
+        }
+
+        if (cell.NeighbourRight != null && !cell.NeighbourRight.IsEmpty)
+        {
+            Item item = cell.NeighbourRight.Item;
+            NormalItem normalItem = item as NormalItem;
+            if (normalItem != null)
+            {
+                types.Remove(normalItem.ItemType);
+            }
+        }
+
+        var typeDict = CountItemType(types);
+        var r = typeDict.OrderBy(pair => pair.Value).First().Key;
+
+        return r;
+    }
+
+    public Dictionary<NormalItem.eNormalType, int> CountItemType(HashSet<NormalItem.eNormalType> types)
+    {
+        Dictionary<NormalItem.eNormalType, int> typeDict = new();
+        foreach (var type in types)
+        {
+            typeDict.Add(type, 0);
+        }
+
+        for (int x = 0; x < boardSizeX; x++)
+        {
+            for (int y = 0; y < boardSizeY; y++)
+            {
+                Cell cell = m_cells[x, y];
+                if (!cell.IsEmpty)
+                {
+                    NormalItem normalItem = cell.Item as NormalItem;
+                    if (normalItem != null)
+                    {
+                        if (typeDict.ContainsKey(normalItem.ItemType))
+                            typeDict[normalItem.ItemType]++;
+                    }
+                }
+            }
+        }
+        return typeDict;
     }
 }
