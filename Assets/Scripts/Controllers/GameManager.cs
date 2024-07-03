@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
     {
         State = state;
 
-        if(State == eStateGame.PAUSE)
+        if (State == eStateGame.PAUSE)
         {
             DOTween.PauseAll();
         }
@@ -142,16 +142,24 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
-        m_boardController.Clear();
-        m_boardController.StartGame(this, m_gameSettings);
-        if (CurMode == eLevelMode.MOVES)
+        if (State == eStateGame.GAME_OVER)
         {
-            m_levelCondition.ResetLevel(m_gameSettings.LevelMoves);
+            ClearLevel();
+            LoadLevel(CurMode);
         }
-        else if (CurMode == eLevelMode.TIMER)
+        else
         {
-            m_levelCondition.ResetLevel(m_gameSettings.LevelTime);
+            m_boardController.Clear();
+            m_boardController.StartGame(this, m_gameSettings);
+            if (CurMode == eLevelMode.MOVES)
+            {
+                m_levelCondition.ResetLevel(m_gameSettings.LevelMoves);
+            }
+            else if (CurMode == eLevelMode.TIMER)
+            {
+                m_levelCondition.ResetLevel(m_gameSettings.LevelTime);
+            }
+            State = eStateGame.GAME_STARTED;
         }
-        State = eStateGame.GAME_STARTED;
     }
 }
